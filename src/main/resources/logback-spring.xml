@@ -1,0 +1,52 @@
+<configuration>
+    <!-- Definimos un appender para la consola -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Appender para archivo de logs -->
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>logs/app.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Loggers para perfiles -->
+
+    <!-- Perfil DEV: logs detallados en consola -->
+    <springProfile name="dev">
+        <root level="DEBUG">
+            <appender-ref ref="CONSOLE" />
+        </root>
+    </springProfile>
+
+    <!-- Perfil TEST: logs info en consola -->
+    <springProfile name="test">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE" />
+        </root>
+    </springProfile>
+
+    <!-- Perfil PROD: solo WARN y ERROR en archivo -->
+    <springProfile name="prod">
+        <root level="WARN">
+            <appender-ref ref="FILE" />
+        </root>
+    </springProfile>
+</configuration>
+
+
+<!-- 
+  Explicación de cada parte
+    <appender name="CONSOLE" ...>: configura que los logs se muestren en consola (pantalla).
+    <appender name="FILE" ...>: configura que los logs se escriban en un archivo llamado logs/app.log.
+    <springProfile name="dev">: dentro de este bloque se configura el logging específico para el perfil dev.
+    <root level="DEBUG">: nivel de logs para el root logger (toda la app). Aquí dice que para dev se muestren logs desde DEBUG para arriba.
+    <appender-ref ref="CONSOLE" />: manda los logs al appender CONSOLE.
+  
+  Para prod, por ejemplo, solo se graban los logs con nivel WARN o superior y se guardan en archivo. 
+-->
